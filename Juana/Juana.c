@@ -1,24 +1,24 @@
 // Programa que convierte a un microcontrolador en un expansor de I/O.
 // Usaremos como esclavo a un PIC16F877A.
-// Programador: Aranzamendi Gabriel.
+// Programadores: Aranzamendi Gabriel. Buschiazzo Jos茅
 // Fecha: 24/07/09.
 
 // Encabezado del programa:
 
-#include <16F877A.h>            // Definici髇 de registros internos del microcontrolador.
+#include <16F877A.h>            // Definici贸n de registros internos del microcontrolador.
 #FUSES NOWDT                    // No utilizaremos el Watch Dog.
 #FUSES HS                       // Utilizaremos un cristal de alta velocidad.
 #FUSES PUT                      // Reset de power up - Activado.
-#FUSES NOPROTECT                // No hay protecci髇 contra lecturas.
-#FUSES NODEBUG                  // No se programa c骴igo para debug.
+#FUSES NOPROTECT                // No hay protecci贸n contra lecturas.
+#FUSES NODEBUG                  // No se programa c贸digo para debug.
 #FUSES NOBROWNOUT               // No se activa el reset por Brownout.
-#FUSES NOLVP                    // No se activa el modo de programaci髇 a bajo voltaje.
+#FUSES NOLVP                    // No se activa el modo de programaci贸n a bajo voltaje.
 #FUSES NOCPD                    // No se proteje a la eeprom contra escritura.
-#FUSES NOWRT                    // No hay protecci髇 contra escritura.
+#FUSES NOWRT                    // No hay protecci贸n contra escritura.
 
 
 #use delay(clock=20000000) 
-#use i2c(Slave,sda=PIN_C4,scl=PIN_C3,address=0xB8) // Direcci髇 del esclavo: 0xB8 ; I2C por hardware.
+#use i2c(Slave,sda=PIN_C4,scl=PIN_C3,address=0xB8) // Direcci贸n del esclavo: 0xB8 ; I2C por hardware.
 
 
 
@@ -34,7 +34,7 @@ BOOLEAN newstatus=false;
 BOOLEAN Estado[8];
 void Actualizar(void);
 
-// Rutina de tratamiento de la interrupci髇 por I2C.
+// Rutina de tratamiento de la interrupci贸n por I2C.
 #int_SSP
 void SSP_isr()
 {
