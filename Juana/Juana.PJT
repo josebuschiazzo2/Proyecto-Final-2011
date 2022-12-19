@@ -1,0 +1,64 @@
+[PROJECT]
+Target=Juana.hex
+Development_Mode=
+Processor=0x877A
+Processor_Text=PIC16F877A
+ToolSuite=CCS
+
+[Directories]
+Include=C:\Archivos de programa\PICC\devices\;C:\Archivos de programa\PICC\drivers\;
+Library=
+LinkerScript=
+
+[Target Data]
+FileList=Z:\Proyecto Final\Programas PIC\Juana\Juana.c
+BuildTool=C-COMPILER
+OptionString=+FM
+AdditionalOptionString=
+BuildRequired=1
+
+[Esclavo I2C.c]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+
+[mru-list]
+1=Juana.c
+
+[Windows]
+0=0000 %S 0 0 796 451 3 0
+
+[Opened Files]
+1=Juana.c
+2=
+3=
+[defines]
+enabled=0
+D1=
+V1=
+[fileformats]
+forcecoff=0
+debug=4
+error=2
+object=0
+list=0
+scratch=0
+sta=1
+tre=1
+allerrors=1
+allwarnings=1
+stayupne=3
+stayupoe=0
+[Juana.c]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+[Units]
+Count=1
+1=Juana (main)

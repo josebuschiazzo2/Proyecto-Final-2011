@@ -1,0 +1,48 @@
+
+ROM used: 816 (2%)
+          816 (2%) including unused fragments
+
+          2 Average locations per line
+          19 Average locations per statement
+
+RAM used: 28 (1%) at main() level
+          36 (2%) worst case
+
+Stack used: 4 worst case (out of 31 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+  149    42 100  DTMF.c
+  392     0   0  C:\Archivos de programa\PICC\devices\18F2550.h
+----- -----
+  541    42 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     38   2   1             @delay_ms1
+0    216  13   0             @const65
+0    106   6   4   320  4.2  wave_generator
+0    244  15   5  1444  5.9  generate_dtmf_tone
+0     66   4   2   149  3.1  MAIN
+
+Program metrics:
+    Functions               3
+    Statements              42
+    Comments                177
+    Volume (V)              2285
+    Difficilty (D)          13.5
+    Effort to implement (E) 30942
+    Time to implement (T)   29 minutes
+    Est Delivered Bugs (B)  0
+    Cyclomatic Complexity   10
+    Maintainability (MI)    62
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00002     4  0  
+00004-00006     0  4  
+00008-00094   142  0  
+00096-07FFE   670  31948  
+
+
+

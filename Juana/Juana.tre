@@ -1,0 +1,13 @@
+ÀÄJuana
+   ÃÄMAIN  0/294  Ram=4
+   ³  ÃÄ??0??
+   ³  ÃÄ@delay_ms1  0/20  Ram=1
+   ³  ÃÄActualizar  0/39  Ram=1
+   ³  ÃÄActualizar  0/39  Ram=1
+   ³  ÃÄ@delay_ms1  0/20  Ram=1
+   ³  ÃÄ@delay_ms1  0/20  Ram=1
+   ³  ÃÄ@delay_ms1  0/20  Ram=1
+   ³  ÃÄActualizar  0/39  Ram=1
+   ³  ÀÄ@delay_ms1  0/20  Ram=1
+   ÀÄSSP_isr  0/63  Ram=0
+      ÀÄ@I2C_WRITE_1  (Inline)  Ram=1

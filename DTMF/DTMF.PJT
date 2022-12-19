@@ -1,0 +1,40 @@
+[PROJECT]
+Target=DTMF.HEX
+Development_Mode=2
+Processor=0x2550
+Processor_Text=PIC18F2550
+ToolSuite=CCS
+
+[Directories]
+Include=
+Library=
+LinkerScript=
+
+[Target Data]
+FileList=Z:\Documentos\UTN\Proyecto Final\Programas PIC\DTMF\DTMF.c
+BuildTool=C-COMPILER
+OptionString=+FH
+AdditionalOptionString=
+BuildRequired=1
+
+[DTMF.c]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+
+[mru-list]
+1=DTMF.c
+
+[Windows]
+0=0000 DTMF.c 0 0 796 451 3 0
+
+[Opened Files]
+1=DTMF.C
+2=
+3=
+[Units]
+Count=1
+1=DTMF (main)

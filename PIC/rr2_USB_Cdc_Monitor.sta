@@ -1,0 +1,63 @@
+
+ROM used: 1996 (12%)
+          1996 (12%) including unused fragments
+
+          2 Average locations per line
+          7 Average locations per statement
+
+RAM used: 343 (45%) at main() level
+          352 (46%) worst case
+
+Stack used: 4 worst case (out of 31 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+  265   141  48  rr2_USB_Cdc_Monitor.c
+  422     0   0  C:\Archivos de programa\PICC\devices\18F14K50.h
+  121    29  10  C:\Archivos de programa\PICC\drivers\input.c
+   28     0   0  C:\Archivos de programa\PICC\drivers\ctype.h
+  409   121  42  C:\Archivos de programa\PICC\drivers\string.h
+   28     0   0  C:\Archivos de programa\PICC\drivers\stddef.h
+----- -----
+ 1273   291 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     42   1   1             @delay_ms1
+0     28   1   1             @I2C_WRITEU_1
+0    142   4   9   318  6.5  strstr
+0     98   2   2   455  6.6  serial_isr
+0    606  15   2  1469  4.8  MAIN
+0     38   1   0             @const207
+0     38   1   0             @const208
+0     46   1   0             @const209
+0     66   2   1   154  3.5  outgsm
+0     38   1   2             @PSTRINGR_19200_31759_31757
+0    516  13   2  1865  6.3  banderas
+0      6   0   0             @const212
+0     36   1   2             @PSTRINGC_19200_31759_31757
+0     36   1   2   114  3.4  Borrar
+0     52   1   0    30  1.3  Llamar
+0     62   2   2   125  2.3  send_i2c
+
+Program metrics:
+    Functions               8
+    Statements              291
+    Comments                328
+    Volume (V)              6269
+    Difficilty (D)          34.9
+    Effort to implement (E) 218637
+    Time to implement (T)   3 hours, 22 minutes
+    Est Delivered Bugs (B)  1
+    Cyclomatic Complexity   22
+    Maintainability (MI)    54
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00002     4  0  
+00004-00006     0  4  
+00008-00094   142  0  
+00096-03FFE  1850  14384  
+
+
+

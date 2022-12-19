@@ -1,0 +1,730 @@
+CCS PCM C Compiler, Version 4.104, 5967               19-sep-11 20:26
+
+               Filename: Z:\Proyecto Final\Programas PIC\Juana\Juana.lst
+
+               ROM used: 465 words (6%)
+                         Largest free fragment is 2048
+               RAM used: 25 (7%) at main() level
+                         26 (7%) worst case
+               Stack:    2 worst case (1 in main + 1 for interrupts)
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   0AB
+0003:  NOP
+0004:  MOVWF  7F
+0005:  SWAPF  03,W
+0006:  CLRF   03
+0007:  MOVWF  21
+0008:  MOVF   0A,W
+0009:  MOVWF  20
+000A:  CLRF   0A
+000B:  MOVF   04,W
+000C:  MOVWF  22
+000D:  MOVF   77,W
+000E:  MOVWF  23
+000F:  MOVF   78,W
+0010:  MOVWF  24
+0011:  MOVF   79,W
+0012:  MOVWF  25
+0013:  MOVF   7A,W
+0014:  MOVWF  26
+0015:  BCF    03.7
+0016:  BCF    03.5
+0017:  MOVLW  8C
+0018:  MOVWF  04
+0019:  BTFSS  00.3
+001A:  GOTO   01D
+001B:  BTFSC  0C.3
+001C:  GOTO   02E
+001D:  MOVF   22,W
+001E:  MOVWF  04
+001F:  MOVF   23,W
+0020:  MOVWF  77
+0021:  MOVF   24,W
+0022:  MOVWF  78
+0023:  MOVF   25,W
+0024:  MOVWF  79
+0025:  MOVF   26,W
+0026:  MOVWF  7A
+0027:  MOVF   20,W
+0028:  MOVWF  0A
+0029:  SWAPF  21,W
+002A:  MOVWF  03
+002B:  SWAPF  7F,F
+002C:  SWAPF  7F,W
+002D:  RETFIE
+002E:  BCF    0A.3
+002F:  BCF    0A.4
+0030:  GOTO   031
+.................... // Programa que convierte a un microcontrolador en un expansor de I/O. 
+.................... // Usaremos como esclavo a un PIC16F877A. 
+.................... // Programador: Aranzamendi Gabriel. 
+.................... // Fecha: 24/07/09. 
+....................  
+.................... // Encabezado del programa: 
+....................  
+.................... #include <16F877A.h>            // Definición de registros internos del microcontrolador. 
+.................... //////// Standard Header file for the PIC16F877A device //////////////// 
+.................... #device PIC16F877A 
+.................... #list 
+....................  
+.................... #FUSES NOWDT                    // No utilizaremos el Watch Dog. 
+.................... #FUSES HS                       // Utilizaremos un cristal de alta velocidad. 
+.................... #FUSES PUT                      // Reset de power up - Activado. 
+.................... #FUSES NOPROTECT                // No hay protección contra lecturas. 
+.................... #FUSES NODEBUG                  // No se programa código para debug. 
+.................... #FUSES NOBROWNOUT               // No se activa el reset por Brownout. 
+.................... #FUSES NOLVP                    // No se activa el modo de programación a bajo voltaje. 
+.................... #FUSES NOCPD                    // No se proteje a la eeprom contra escritura. 
+.................... #FUSES NOWRT                    // No hay protección contra escritura. 
+....................  
+....................  
+.................... #use delay(clock=20000000)  
+*
+0070:  MOVLW  31
+0071:  MOVWF  04
+0072:  BCF    03.7
+0073:  MOVF   00,W
+0074:  BTFSC  03.2
+0075:  GOTO   083
+0076:  MOVLW  06
+0077:  MOVWF  78
+0078:  CLRF   77
+0079:  DECFSZ 77,F
+007A:  GOTO   079
+007B:  DECFSZ 78,F
+007C:  GOTO   078
+007D:  MOVLW  7B
+007E:  MOVWF  77
+007F:  DECFSZ 77,F
+0080:  GOTO   07F
+0081:  DECFSZ 00,F
+0082:  GOTO   076
+0083:  RETURN
+.................... #use i2c(Slave,sda=PIN_C4,scl=PIN_C3,address=0xB8) // Dirección del esclavo: 0xB8 ; I2C por hardware. 
+*
+0058:  MOVF   34,W
+0059:  MOVWF  13
+005A:  BSF    14.4
+005B:  BCF    0C.3
+005C:  BSF    03.5
+005D:  BTFSC  14.0
+005E:  GOTO   05D
+005F:  CLRF   78
+0060:  BCF    03.5
+0061:  BTFSC  14.4
+0062:  INCF   78,F
+....................  
+....................  
+....................  
+.................... void entrada(int8 Pata); 
+....................  
+....................  
+.................... // Variables globales: 
+.................... int i2cstat,dato; 
+.................... int flag=0; 
+.................... int valor=0; 
+.................... int ringueando=0; 
+.................... BOOLEAN newstatus=false; 
+.................... BOOLEAN Estado[8]; 
+.................... void Actualizar(void); 
+....................  
+.................... // Rutina de tratamiento de la interrupción por I2C. 
+.................... #int_SSP 
+.................... void SSP_isr() 
+.................... { 
+....................    i2cstat=i2c_isr_state(); 
+*
+0031:  BSF    03.5
+0032:  BTFSC  14.5
+0033:  GOTO   03C
+0034:  BCF    03.5
+0035:  CLRF   2F
+0036:  BSF    03.5
+0037:  BTFSS  14.2
+0038:  GOTO   03C
+0039:  BCF    03.5
+003A:  BSF    2F.7
+003B:  BSF    03.5
+003C:  BCF    03.5
+003D:  MOVF   2F,W
+003E:  INCF   2F,F
+003F:  MOVWF  28
+....................    if((i2cstat>=0)&&(i2cstat<0x80)){ 
+0040:  MOVF   28,W
+0041:  SUBLW  7F
+0042:  BTFSS  03.0
+0043:  GOTO   04F
+....................          disable_interrupts(INT_SSP); 
+0044:  BSF    03.5
+0045:  BCF    0C.3
+....................          dato=i2c_read(1); 
+0046:  BCF    03.5
+0047:  BCF    14.6
+0048:  BTFSS  0C.3
+0049:  GOTO   048
+004A:  MOVF   13,W
+004B:  BSF    14.4
+004C:  MOVWF  29
+....................          //output_high(PIN_B1); // Indica que se ha recibido un dato de parte del master. 
+....................          flag=1; 
+004D:  MOVLW  01
+004E:  MOVWF  2A
+....................       } 
+....................    if(i2cstat>=0x80){ 
+004F:  MOVF   28,W
+0050:  SUBLW  7F
+0051:  BTFSC  03.0
+0052:  GOTO   06C
+....................       disable_interrupts(INT_SSP); 
+0053:  BSF    03.5
+0054:  BCF    0C.3
+....................       i2c_write(valor); 
+0055:  BCF    03.5
+0056:  MOVF   2B,W
+0057:  MOVWF  34
+....................       i2c_read(1); 
+*
+0063:  BCF    14.6
+0064:  BTFSS  0C.3
+0065:  GOTO   064
+0066:  MOVF   13,W
+0067:  BSF    14.4
+....................       output_high(PIN_B5); 
+0068:  BSF    03.5
+0069:  BCF    06.5
+006A:  BCF    03.5
+006B:  BSF    06.5
+....................       //newstatus=1; 
+....................       } 
+.................... }  
+....................  
+....................  
+....................  
+006C:  BCF    0C.3
+006D:  BCF    0A.3
+006E:  BCF    0A.4
+006F:  GOTO   01D
+.................... void main(){ 
+*
+00AB:  CLRF   04
+00AC:  BCF    03.7
+00AD:  MOVLW  1F
+00AE:  ANDWF  03,F
+00AF:  BSF    27.3
+00B0:  MOVF   27,W
+00B1:  BSF    03.5
+00B2:  MOVWF  07
+00B3:  BCF    03.5
+00B4:  BSF    27.4
+00B5:  MOVF   27,W
+00B6:  BSF    03.5
+00B7:  MOVWF  07
+00B8:  MOVLW  B8
+00B9:  MOVWF  13
+00BA:  MOVLW  36
+00BB:  BCF    03.5
+00BC:  MOVWF  14
+00BD:  BSF    03.5
+00BE:  BSF    11.0
+00BF:  BCF    03.5
+00C0:  CLRF   2A
+00C1:  CLRF   2B
+00C2:  CLRF   2C
+00C3:  BCF    2D.0
+00C4:  BSF    03.5
+00C5:  BSF    1F.0
+00C6:  BSF    1F.1
+00C7:  BSF    1F.2
+00C8:  BCF    1F.3
+00C9:  MOVLW  07
+00CA:  MOVWF  1C
+*
+00D0:  CLRF   30
+....................    int alarma =0; 
+....................    Estado[0]=0; 
+00D1:  BCF    2E.0
+....................    Estado[1]=0; 
+00D2:  BCF    2E.1
+....................    set_tris_b(0xC9); 
+00D3:  MOVLW  C9
+00D4:  BSF    03.5
+00D5:  MOVWF  06
+....................    set_tris_d(0xFF); 
+00D6:  MOVLW  FF
+00D7:  MOVWF  08
+....................     
+....................    enable_interrupts(GLOBAL); 
+00D8:  MOVLW  C0
+00D9:  BCF    03.5
+00DA:  IORWF  0B,F
+....................    enable_interrupts(INT_SSP); 
+00DB:  BSF    03.5
+00DC:  BSF    0C.3
+....................    output_high(PIN_B5); 
+00DD:  BCF    06.5
+00DE:  BCF    03.5
+00DF:  BSF    06.5
+....................    delay_ms(200); 
+00E0:  MOVLW  C8
+00E1:  MOVWF  31
+00E2:  CALL   070
+....................     
+....................     
+....................    do{ 
+....................       if((input(PIN_A0)==FALSE)&&(ringueando==0)){ 
+00E3:  BSF    03.5
+00E4:  BSF    05.0
+00E5:  BCF    03.5
+00E6:  BTFSC  05.0
+00E7:  GOTO   0EF
+00E8:  MOVF   2C,F
+00E9:  BTFSS  03.2
+00EA:  GOTO   0EF
+....................          ringueando=1; 
+00EB:  MOVLW  01
+00EC:  MOVWF  2C
+....................          Estado[0]=1; 
+00ED:  BSF    2E.0
+....................          Actualizar(); 
+00EE:  CALL   084
+....................          } 
+....................           
+....................       if((input(PIN_B0)==FALSE)&&(alarma<3)){ 
+00EF:  BSF    03.5
+00F0:  BSF    06.0
+00F1:  BCF    03.5
+00F2:  BTFSC  06.0
+00F3:  GOTO   0FB
+00F4:  MOVF   30,W
+00F5:  SUBLW  02
+00F6:  BTFSS  03.0
+00F7:  GOTO   0FB
+....................          Estado[1]=1; 
+00F8:  BSF    2E.1
+....................          Actualizar(); 
+00F9:  CALL   084
+....................          alarma++; 
+00FA:  INCF   30,F
+....................          } 
+....................       
+....................       
+....................     /////////////////////////////    
+....................     //   Bit 0 = Ring          // 
+....................     //   Bit 1 = Alerta Juana  // 
+....................     //   Bit 2 = Entrada 1     // 
+....................     //   Bit 3 = Entrada 2     // 
+....................     //   Bit 4 = Entrada 3     // 
+....................     //   Bit 5 = Salida 1      // 
+....................     //   Bit 6 = Salida 2      // 
+....................     //   Bit 7 = Salida 3      // 
+....................     ///////////////////////////// 
+....................   
+.................... //*************************************************************************************************************  
+....................  if((Estado[2]==TRUE)&&(input(PIN_A1)==TRUE)&&(input(PIN_B5)==TRUE)){ 
+00FB:  BTFSS  2E.2
+00FC:  GOTO   109
+00FD:  BSF    03.5
+00FE:  BSF    05.1
+00FF:  BCF    03.5
+0100:  BTFSS  05.1
+0101:  GOTO   109
+0102:  BSF    03.5
+0103:  BSF    06.5
+0104:  BCF    03.5
+0105:  BTFSS  06.5
+0106:  GOTO   109
+....................       Estado[2]=FALSE; 
+0107:  BCF    2E.2
+....................       newstatus=1; 
+0108:  BSF    2D.0
+....................       } 
+....................    if((input(PIN_A1)==FALSE)&&(Estado[2]==FALSE)&&(input(PIN_B5)==TRUE)){ 
+0109:  BSF    03.5
+010A:  BSF    05.1
+010B:  BCF    03.5
+010C:  BTFSC  05.1
+010D:  GOTO   127
+010E:  BTFSC  2E.2
+010F:  GOTO   127
+0110:  BSF    03.5
+0111:  BSF    06.5
+0112:  BCF    03.5
+0113:  BTFSS  06.5
+0114:  GOTO   127
+....................          delay_ms(250); 
+0115:  MOVLW  FA
+0116:  MOVWF  31
+0117:  CALL   070
+....................          newstatus=1; 
+0118:  BSF    2D.0
+....................          Estado[2]=TRUE; 
+0119:  BSF    2E.2
+....................          output_toggle(PIN_B4); 
+011A:  BSF    03.5
+011B:  BCF    06.4
+011C:  MOVLW  10
+011D:  BCF    03.5
+011E:  XORWF  06,F
+....................          Estado[5]^=1;        //Hace un toggle en el elemento 6 del vector Estado Estado[5]=Estado[5]XOR 1 
+011F:  MOVLW  00
+0120:  BTFSC  2E.5
+0121:  MOVLW  01
+0122:  XORLW  01
+0123:  MOVWF  78
+0124:  BCF    2E.5
+0125:  BTFSC  78.0
+0126:  BSF    2E.5
+....................       } 
+....................    
+.................... //*************************************************************************************************************   
+....................   
+....................   if((Estado[3]==TRUE)&&(input(PIN_A2)==TRUE)&&(input(PIN_B5)==TRUE)){ 
+0127:  BTFSS  2E.3
+0128:  GOTO   135
+0129:  BSF    03.5
+012A:  BSF    05.2
+012B:  BCF    03.5
+012C:  BTFSS  05.2
+012D:  GOTO   135
+012E:  BSF    03.5
+012F:  BSF    06.5
+0130:  BCF    03.5
+0131:  BTFSS  06.5
+0132:  GOTO   135
+....................       Estado[3]=FALSE; 
+0133:  BCF    2E.3
+....................       newstatus=1; 
+0134:  BSF    2D.0
+....................       } 
+....................    if((input(PIN_A2)==FALSE)&&(Estado[3]==FALSE)&&(input(PIN_B5)==TRUE)){ 
+0135:  BSF    03.5
+0136:  BSF    05.2
+0137:  BCF    03.5
+0138:  BTFSC  05.2
+0139:  GOTO   153
+013A:  BTFSC  2E.3
+013B:  GOTO   153
+013C:  BSF    03.5
+013D:  BSF    06.5
+013E:  BCF    03.5
+013F:  BTFSS  06.5
+0140:  GOTO   153
+....................          delay_ms(250); 
+0141:  MOVLW  FA
+0142:  MOVWF  31
+0143:  CALL   070
+....................          newstatus=1; 
+0144:  BSF    2D.0
+....................          Estado[3]=TRUE; 
+0145:  BSF    2E.3
+....................          output_toggle(PIN_B2); 
+0146:  BSF    03.5
+0147:  BCF    06.2
+0148:  MOVLW  04
+0149:  BCF    03.5
+014A:  XORWF  06,F
+....................          Estado[6]^=1;        //Hace un toggle en el elemento 7 del vector Estado Estado[6]=Estado[6]XOR 1 
+014B:  MOVLW  00
+014C:  BTFSC  2E.6
+014D:  MOVLW  01
+014E:  XORLW  01
+014F:  MOVWF  78
+0150:  BCF    2E.6
+0151:  BTFSC  78.0
+0152:  BSF    2E.6
+....................       }   
+.................... //*************************************************************************************************************       
+....................    if((Estado[4]==TRUE)&&(input(PIN_A3)==TRUE)&&(input(PIN_B5)==TRUE)){ 
+0153:  BTFSS  2E.4
+0154:  GOTO   161
+0155:  BSF    03.5
+0156:  BSF    05.3
+0157:  BCF    03.5
+0158:  BTFSS  05.3
+0159:  GOTO   161
+015A:  BSF    03.5
+015B:  BSF    06.5
+015C:  BCF    03.5
+015D:  BTFSS  06.5
+015E:  GOTO   161
+....................       Estado[4]=FALSE; 
+015F:  BCF    2E.4
+....................       newstatus=1; 
+0160:  BSF    2D.0
+....................       } 
+....................    if((input(PIN_A3)==FALSE)&&(Estado[4]==FALSE)&&(input(PIN_B5)==TRUE)){ 
+0161:  BSF    03.5
+0162:  BSF    05.3
+0163:  BCF    03.5
+0164:  BTFSC  05.3
+0165:  GOTO   17F
+0166:  BTFSC  2E.4
+0167:  GOTO   17F
+0168:  BSF    03.5
+0169:  BSF    06.5
+016A:  BCF    03.5
+016B:  BTFSS  06.5
+016C:  GOTO   17F
+....................          delay_ms(250); 
+016D:  MOVLW  FA
+016E:  MOVWF  31
+016F:  CALL   070
+....................          newstatus=1; 
+0170:  BSF    2D.0
+....................          Estado[4]=TRUE; 
+0171:  BSF    2E.4
+....................          output_toggle(PIN_B1); 
+0172:  BSF    03.5
+0173:  BCF    06.1
+0174:  MOVLW  02
+0175:  BCF    03.5
+0176:  XORWF  06,F
+....................          Estado[7]^=1;        //Hace un toggle en el elemento 8 del vector Estado Estado[7]=Estado[7]XOR 1 
+0177:  MOVLW  00
+0178:  BTFSC  2E.7
+0179:  MOVLW  01
+017A:  XORLW  01
+017B:  MOVWF  78
+017C:  BCF    2E.7
+017D:  BTFSC  78.0
+017E:  BSF    2E.7
+....................       }  
+.................... //*************************************************************************************************************  
+....................  
+.................... /***************************** 
+.................... ****  RECIBIO DATO X I2C  ****      
+.................... *****************************/ 
+....................     
+....................    if(flag==1){ 
+017F:  DECFSZ 2A,W
+0180:  GOTO   1C5
+....................       if((dato==1)){ 
+0181:  DECFSZ 29,W
+0182:  GOTO   188
+....................         output_high(PIN_B1); 
+0183:  BSF    03.5
+0184:  BCF    06.1
+0185:  BCF    03.5
+0186:  BSF    06.1
+....................         dato=0; 
+0187:  CLRF   29
+....................         }      
+....................              
+....................       if((dato==2)){ 
+0188:  MOVF   29,W
+0189:  SUBLW  02
+018A:  BTFSS  03.2
+018B:  GOTO   191
+....................         output_high(PIN_B2); 
+018C:  BSF    03.5
+018D:  BCF    06.2
+018E:  BCF    03.5
+018F:  BSF    06.2
+....................         dato=0; 
+0190:  CLRF   29
+....................         } 
+....................              
+....................       if((dato==3)){ 
+0191:  MOVF   29,W
+0192:  SUBLW  03
+0193:  BTFSS  03.2
+0194:  GOTO   19A
+....................         output_high(PIN_B4); 
+0195:  BSF    03.5
+0196:  BCF    06.4
+0197:  BCF    03.5
+0198:  BSF    06.4
+....................         dato=0; 
+0199:  CLRF   29
+....................         } 
+....................       if(dato==11){ 
+019A:  MOVF   29,W
+019B:  SUBLW  0B
+019C:  BTFSS  03.2
+019D:  GOTO   1A3
+....................         output_low(PIN_B1); 
+019E:  BSF    03.5
+019F:  BCF    06.1
+01A0:  BCF    03.5
+01A1:  BCF    06.1
+....................         dato=0; 
+01A2:  CLRF   29
+....................         } 
+....................       if(dato==12){ 
+01A3:  MOVF   29,W
+01A4:  SUBLW  0C
+01A5:  BTFSS  03.2
+01A6:  GOTO   1AC
+....................          output_low(PIN_B2); 
+01A7:  BSF    03.5
+01A8:  BCF    06.2
+01A9:  BCF    03.5
+01AA:  BCF    06.2
+....................          dato=0; 
+01AB:  CLRF   29
+....................       } 
+....................       if(dato==13){ 
+01AC:  MOVF   29,W
+01AD:  SUBLW  0D
+01AE:  BTFSS  03.2
+01AF:  GOTO   1B5
+....................          output_low(PIN_B4); 
+01B0:  BSF    03.5
+01B1:  BCF    06.4
+01B2:  BCF    03.5
+01B3:  BCF    06.4
+....................          dato=0; 
+01B4:  CLRF   29
+....................       } 
+....................       if(dato==20){                       // dato enviado automaticamente por el kit avisando que se atendio la llamada de la central 
+01B5:  MOVF   29,W
+01B6:  SUBLW  14
+01B7:  BTFSS  03.2
+01B8:  GOTO   1BC
+....................          ringueando=0; 
+01B9:  CLRF   2C
+....................          Estado[0]=0; 
+01BA:  BCF    2E.0
+....................          dato=0; 
+01BB:  CLRF   29
+....................       } 
+....................       if(dato==22){                       // Re-arma el aviso de Alarma  
+01BC:  MOVF   29,W
+01BD:  SUBLW  16
+01BE:  BTFSS  03.2
+01BF:  GOTO   1C3
+....................          Alarma=0; 
+01C0:  CLRF   30
+....................          Estado[1]=0; 
+01C1:  BCF    2E.1
+....................          dato=0; 
+01C2:  CLRF   29
+....................       } 
+....................        
+....................       flag=0; 
+01C3:  CLRF   2A
+....................       newstatus=1;                      //levanta el flag para que actualice el vector de estado y lo envie al kit 
+01C4:  BSF    2D.0
+....................      } 
+....................             
+....................    if((newstatus==1)||(flag==1)){ 
+01C5:  BTFSC  2D.0
+01C6:  GOTO   1C9
+01C7:  DECFSZ 2A,W
+01C8:  GOTO   1CA
+....................      Actualizar();  
+01C9:  CALL   084
+....................      } 
+....................                
+....................                   
+....................    delay_ms(150); 
+01CA:  MOVLW  96
+01CB:  MOVWF  31
+01CC:  CALL   070
+....................    enable_interrupts(INT_SSP); 
+01CD:  BSF    03.5
+01CE:  BSF    0C.3
+....................       
+....................       
+....................       
+....................       
+....................       
+....................    /* 
+....................    fijarse antes de terminar el while que es lo que se ha recibido por i2c y poner ringueando a 0 si corresponde el mensaje enviado, acordarse de  
+....................    ponerlo en el programa del kit 
+....................    */ 
+....................     
+....................     
+....................    }while(true); 
+....................  
+....................  
+.................... } 
+01CF:  GOTO   0E4
+....................   
+....................    
+....................  void entrada(int8 Pata){ 
+....................    if(input(Pata)==FALSE){ 
+01D0:  SLEEP
+....................          delay_ms(50); 
+....................          if(input(Pata)==FALSE){ 
+....................             delay_ms(150); 
+....................             } 
+....................          } 
+....................  } 
+....................   
+....................  void Actualizar(void){ 
+....................    valor=0; 
+*
+0084:  CLRF   2B
+....................    if(Estado[0]==TRUE){ 
+0085:  BTFSS  2E.0
+0086:  GOTO   089
+....................       valor = valor+1; 
+0087:  MOVLW  01
+0088:  ADDWF  2B,F
+....................       } 
+....................    if(Estado[1]==TRUE){ 
+0089:  BTFSS  2E.1
+008A:  GOTO   08D
+....................       valor = valor+2; 
+008B:  MOVLW  02
+008C:  ADDWF  2B,F
+....................       }    
+....................    if(Estado[2]==TRUE){ 
+008D:  BTFSS  2E.2
+008E:  GOTO   091
+....................       valor = valor+4; 
+008F:  MOVLW  04
+0090:  ADDWF  2B,F
+....................       } 
+....................    if(Estado[3]==TRUE){ 
+0091:  BTFSS  2E.3
+0092:  GOTO   095
+....................       valor = valor+8; 
+0093:  MOVLW  08
+0094:  ADDWF  2B,F
+....................       } 
+....................    if(Estado[4]==TRUE){ 
+0095:  BTFSS  2E.4
+0096:  GOTO   099
+....................       valor = valor+16; 
+0097:  MOVLW  10
+0098:  ADDWF  2B,F
+....................       } 
+....................    if(Estado[5]==TRUE){ 
+0099:  BTFSS  2E.5
+009A:  GOTO   09D
+....................       valor = valor+32; 
+009B:  MOVLW  20
+009C:  ADDWF  2B,F
+....................       } 
+....................    if(Estado[6]==TRUE){ 
+009D:  BTFSS  2E.6
+009E:  GOTO   0A1
+....................       valor = valor+64; 
+009F:  MOVLW  40
+00A0:  ADDWF  2B,F
+....................       } 
+....................    if(Estado[7]==TRUE){ 
+00A1:  BTFSS  2E.7
+00A2:  GOTO   0A5
+....................       valor = valor+128; 
+00A3:  MOVLW  80
+00A4:  ADDWF  2B,F
+....................       } 
+....................       output_low(PIN_B5);         // le avisa a juana que hubo cambios en el vector de estado para que lo solicite 
+00A5:  BSF    03.5
+00A6:  BCF    06.5
+00A7:  BCF    03.5
+00A8:  BCF    06.5
+....................       newstatus=0; 
+00A9:  BCF    2D.0
+.................... } 
+00AA:  RETURN
+....................  
+
+Configuration Fuses:
+   Word  1: 3F32   HS NOWDT PUT NODEBUG NOPROTECT NOBROWNOUT NOLVP NOCPD NOWRT

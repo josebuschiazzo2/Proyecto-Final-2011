@@ -1,0 +1,43 @@
+[PROJECT]
+Target=rr2_USB_Cdc_Monitor.HEX
+Development_Mode=2
+Processor=0xA145
+Processor_Text=PIC18F14K50
+ToolSuite=CCS
+
+[Directories]
+Include=
+Library=
+LinkerScript=
+
+[Target Data]
+FileList=Z:\Documentos\UTN\Proyecto Final\Programas PIC\Proy GSM\PIC\rr2_USB_Cdc_Monitor.c
+BuildTool=C-COMPILER
+OptionString=+FH
+AdditionalOptionString=
+BuildRequired=1
+
+[rr2_USB_Cdc_Monitor.c]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+
+[mru-list]
+1=RR2_~1AF.C
+
+[Windows]
+0=0000 RR2_~1AF.C 0 0 796 451 3 0
+
+[Opened Files]
+1=rr2_USB_Cdc_Monitor.c
+2=
+3=
+4=C:\Archivos de programa\PICC\drivers\input.c
+5=C:\Archivos de programa\PICC\drivers\string.h
+6=
+[Units]
+Count=1
+1=rr2_USB_Cdc_Monitor (main)

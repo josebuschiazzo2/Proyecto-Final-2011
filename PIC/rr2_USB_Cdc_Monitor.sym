@@ -1,0 +1,140 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @INTERRUPT_AREA
+005     @INTERRUPT_AREA
+006     @INTERRUPT_AREA
+007     @INTERRUPT_AREA
+008     @INTERRUPT_AREA
+009     @INTERRUPT_AREA
+00A     @INTERRUPT_AREA
+00B     @INTERRUPT_AREA
+00C     @INTERRUPT_AREA
+00D     @INTERRUPT_AREA
+00E     @INTERRUPT_AREA
+00F     @INTERRUPT_AREA
+010     @INTERRUPT_AREA
+011     @INTERRUPT_AREA
+012     @INTERRUPT_AREA
+013     @INTERRUPT_AREA
+014     @INTERRUPT_AREA
+015     @INTERRUPT_AREA
+016-017 strtok.save
+018     dato
+019-024 Telefono
+025-031 Texto
+032-036 Ring
+037-03B Mensaje
+03C-13B Entrada
+13C-14F strgsm
+150     n
+151     flag
+152     Estado
+153     l
+154.0   status
+155     send_i2c.dato
+155-156 strstr.s1
+155     MAIN.@SCRATCH1
+155     outgsm.@SCRATCH1
+155     @PSTRINGR_19200_31759_31757.@SCRATCH1
+155     banderas.@SCRATCH1
+155     @PSTRINGC_19200_31759_31757.@SCRATCH1
+155     Borrar.@SCRATCH1
+156     @delay_ms1.P1
+156     send_i2c.dir
+156     MAIN.@SCRATCH2
+156     @PSTRINGR_19200_31759_31757.@SCRATCH2
+156     banderas.@SCRATCH2
+156     @PSTRINGC_19200_31759_31757.@SCRATCH2
+156     Borrar.@SCRATCH2
+157-158 strstr.s2
+157     @I2C_WRITEU_1.P1
+159-15A strstr.s
+15B-15C strstr.t
+15D     strstr.@SCRATCH1
+15E     serial_isr.@SCRATCH1
+15F     serial_isr.@SCRATCH2
+F74     CCP_4
+F74     CCP_4_LOW
+F75     CCP_4_HIGH
+FB4.5   C1OUT
+FB4.6   C2OUT
+FB4.7   C3OUT
+FB8     CCP_3
+FB8     CCP_3_LOW
+FB9     CCP_3_HIGH
+FBB     CCP_2_LOW
+FBB     CCP_2
+FBC     CCP_2_HIGH
+FBE     CCP_1
+FBE     CCP_1_LOW
+FBF     CCP_1_HIGH
+FE1-FE2 @WRITE_PACKED_MEMORY.P1
+FE1-FE2 @READ_PACKED_MEMORY.P2
+FE9-FEA @READ_PACKED_MEMORY.P1
+FE9-FEA @WRITE_PACKED_MEMORY.P2
+FE9-FEA @WRITE_PROGRAM_MEMORY.P3
+FE9-FEA @READ_PROGRAM_MEMORY.P4
+FF6-FF8 @READ_PROGRAM_MEMORY.P1
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+0178  @delay_ms1
+04E4  @I2C_WRITEU_1
+01C8  strstr
+0110  serial_isr
+0572  MAIN
+0096  @const207
+00BC  @const208
+00E2  @const209
+04A2  outgsm
+01A2  @PSTRINGR_19200_31759_31757
+029E  banderas
+0172  @const212
+027A  @PSTRINGC_19200_31759_31757
+0256  Borrar
+053E  Llamar
+0500  send_i2c
+0572  @cinit
+00B2  end
+0256  loop
+
+
+User Memory space: 
+
+User Memory space: 
+
+Project Directory:
+    Z:\Documentos\UTN\Proyecto Final\Programas PIC\Proy GSM\PIC\
+
+Project Files:
+    rr2_USB_Cdc_Monitor.c
+    C:\Archivos de programa\PICC\devices\18F14K50.h
+    C:\Archivos de programa\PICC\drivers\input.c
+    C:\Archivos de programa\PICC\drivers\ctype.h
+    C:\Archivos de programa\PICC\drivers\string.h
+    C:\Archivos de programa\PICC\drivers\stddef.h
+
+Units:
+    Z:\Documentos\UTN\Proyecto Final\Programas PIC\Proy GSM\PIC\rr2_USB_Cdc_Monitor (main)
+
+Compiler Settings:
+    Processor:      PIC18F14K50
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    Errors:      rr2_USB_Cdc_Monitor.err
+    Ext Symbols: rr2_USB_Cdc_Monitor.esym
+    INHX32:      rr2_USB_Cdc_Monitor.hex
+    Symbols:     rr2_USB_Cdc_Monitor.sym
+    List:        rr2_USB_Cdc_Monitor.lst
+    Debug/COFF:  rr2_USB_Cdc_Monitor.cof
+    Project:     rr2_USB_Cdc_Monitor.PJT
+    Call Tree:   rr2_USB_Cdc_Monitor.tre
+    Statistics:  rr2_USB_Cdc_Monitor.sta

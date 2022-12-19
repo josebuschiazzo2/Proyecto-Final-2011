@@ -1,0 +1,96 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @INTERRUPT_AREA
+005     @INTERRUPT_AREA
+006     @INTERRUPT_AREA
+007     @INTERRUPT_AREA
+008     @INTERRUPT_AREA
+009     @INTERRUPT_AREA
+00A     @INTERRUPT_AREA
+00B     @INTERRUPT_AREA
+00C     @INTERRUPT_AREA
+00D     @INTERRUPT_AREA
+00E     @INTERRUPT_AREA
+00F     @INTERRUPT_AREA
+010     @INTERRUPT_AREA
+011     @INTERRUPT_AREA
+012     @INTERRUPT_AREA
+013     @INTERRUPT_AREA
+014     @INTERRUPT_AREA
+015     @INTERRUPT_AREA
+016     index1
+017     index2
+018     inc1
+019     inc2
+01A     MAIN.k
+01B     generate_dtmf_tone.keypad
+01B     MAIN.@SCRATCH1
+01C-01D generate_dtmf_tone.duration
+01E     @delay_ms1.P1
+01E     generate_dtmf_tone.@SCRATCH1
+01F     generate_dtmf_tone.@SCRATCH2
+020     wave_generator.wave
+021     wave_generator.@SCRATCH1
+022     wave_generator.@SCRATCH2
+023     wave_generator.@SCRATCH3
+FB4.6   C1OUT
+FB4.7   C2OUT
+FBB     CCP_2
+FBB     CCP_2_LOW
+FBC     CCP_2_HIGH
+FBE     CCP_1
+FBE     CCP_1_LOW
+FBF     CCP_1_HIGH
+FE1-FE2 @WRITE_PACKED_MEMORY.P1
+FE1-FE2 @READ_PACKED_MEMORY.P2
+FE9-FEA @READ_PROGRAM_MEMORY.P1
+FE9-FEA @WRITE_PROGRAM_MEMORY.P2
+FE9-FEA @WRITE_PACKED_MEMORY.P3
+FE9-FEA @READ_PACKED_MEMORY.P4
+FF6-FF8 @READ_PROGRAM_MEMORY.P1
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+01D8  @delay_ms1
+0096  SINE_WAVE
+016E  wave_generator
+01FE  generate_dtmf_tone
+02F2  MAIN
+02F2  @cinit
+
+
+User Memory space: 
+
+User Memory space: 
+
+Project Directory:
+    Z:\Documentos\UTN\Proyecto Final\Programas PIC\DTMF\
+
+Project Files:
+    DTMF.c
+    C:\Archivos de programa\PICC\devices\18F2550.h
+
+Units:
+    Z:\Documentos\UTN\Proyecto Final\Programas PIC\DTMF\DTMF (main)
+
+Compiler Settings:
+    Processor:      PIC18F2550
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    Errors:      DTMF.err
+    Ext Symbols: DTMF.esym
+    INHX32:      DTMF.hex
+    Symbols:     DTMF.sym
+    List:        DTMF.lst
+    Debug/COFF:  DTMF.cof
+    Project:     DTMF.PJT
+    Call Tree:   DTMF.tre
+    Statistics:  DTMF.sta

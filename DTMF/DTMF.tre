@@ -1,0 +1,11 @@
+ÀÄDTMF
+   ÃÄMAIN  0/66  Ram=2
+   ³  ÃÄ??0??
+   ³  ÃÄgenerate_dtmf_tone  0/244  Ram=5
+   ³  ³  ÀÄ@delay_ms1  0/38  Ram=1
+   ³  ÃÄ@delay_ms1  0/38  Ram=1
+   ³  ÀÄgenerate_dtmf_tone  0/244  Ram=5
+   ³     ÀÄ@delay_ms1  0/38  Ram=1
+   ÀÄwave_generator  0/106  Ram=4
+      ÃÄ@const65  0/216  Ram=0
+      ÀÄ@const65  0/216  Ram=0

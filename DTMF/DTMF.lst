@@ -1,0 +1,437 @@
+CCS PCH C Compiler, Version 4.104, 5967               16-sep-11 19:05
+
+               Filename: Z:\Documentos\UTN\Proyecto Final\Programas PIC\DTMF\DTMF.lst
+
+               ROM used: 816 bytes (2%)
+                         Largest free fragment is 31948
+               RAM used: 28 (1%) at main() level
+                         36 (2%) worst case
+               Stack:    4 worst case (2 in main + 2 for interrupts)
+
+*
+0000:  GOTO   02F2
+*
+0008:  MOVWF  04
+000A:  MOVFF  FD8,05
+000E:  MOVFF  FE0,06
+0012:  MOVLB  0
+0014:  MOVFF  FE9,0C
+0018:  MOVFF  FEA,07
+001C:  MOVFF  FE1,08
+0020:  MOVFF  FE2,09
+0024:  MOVFF  FD9,0A
+0028:  MOVFF  FDA,0B
+002C:  MOVFF  FF3,12
+0030:  MOVFF  FF4,13
+0034:  MOVFF  FFA,14
+0038:  MOVFF  00,0E
+003C:  MOVFF  01,0F
+0040:  MOVFF  02,10
+0044:  MOVFF  03,11
+0048:  BTFSS  FF2.5
+004A:  GOTO   0054
+004E:  BTFSC  FF2.2
+0050:  GOTO   016E
+0054:  MOVFF  0E,00
+0058:  MOVFF  0F,01
+005C:  MOVFF  10,02
+0060:  MOVFF  11,03
+0064:  MOVFF  0C,FE9
+0068:  MOVFF  07,FEA
+006C:  BSF    07.7
+006E:  MOVFF  08,FE1
+0072:  MOVFF  09,FE2
+0076:  MOVFF  0A,FD9
+007A:  MOVFF  0B,FDA
+007E:  MOVFF  12,FF3
+0082:  MOVFF  13,FF4
+0086:  MOVFF  14,FFA
+008A:  MOVF   04,W
+008C:  MOVFF  06,FE0
+0090:  MOVFF  05,FD8
+0094:  RETFIE 0
+.................... ///////////////////////////////////////////////////////////////////////// 
+.................... ////                           EX_DTMF.C                             //// 
+.................... ////                                                                 //// 
+.................... ////  This program simulates a touch-tone telephone.  The user can   //// 
+.................... ////  push keys on the keypad and the dtmf tones will be heard over  //// 
+.................... ////  the speaker.  If the user places the receiver of a telephone   //// 
+.................... ////  over the speaker, and then dials a number on the keypad, the   //// 
+.................... ////  telephone will recognize the dtmf tones and place the call.    //// 
+.................... ////                                                                 //// 
+.................... ////  Configure the CCS prototype card as follows:                   //// 
+.................... ////     Plug in the KEYPAD.                                         //// 
+.................... ////     Connect a R-2R ladder to Port D as shown below.             //// 
+.................... ////     Connect the negative wire of the speaker to ground.         //// 
+.................... ////     Connect the positive wire of the speaker to the output of   //// 
+.................... ////        the R-2R ladder.                                         //// 
+.................... ////                                                                 //// 
+.................... ////  PIN D0  PIN D1  PIN D2  PIN D3  PIN D4  PIN D5  PIN D6  PIN D7 //// 
+.................... ////    |       |       |       |       |       |       |       |    //// 
+.................... ////   2R      2R      2R      2R      2R      2R      2R      2R    //// 
+.................... ////    |       |       |       |       |       |       |       |    //// 
+.................... ////    *---R---*---R---*---R---*---R---*---R---*---R---*---R---*    //// 
+.................... ////    |                                                       |    //// 
+.................... ////   2R                                                       |    //// 
+.................... ////    |                R = 100 ohms                         OUTPUT //// 
+.................... ////   GND              2R = 200 ohms                                //// 
+.................... ////                                                                 //// 
+.................... ////  This example will work with the PCB, PCM and PCH compilers.    //// 
+.................... ////  The following conditional compilation lines are used to        //// 
+.................... ////  include a valid device for each compiler.  Change the device,  //// 
+.................... ////  clock and RS232 pins for your hardware if needed.              //// 
+.................... ///////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996,2003 Custom Computer Services         //// 
+.................... //// This source code may only be used by licensed users of the CCS  //// 
+.................... //// C compiler.  This source code may only be distributed to other  //// 
+.................... //// licensed users of the CCS C compiler.  No other use,            //// 
+.................... //// reproduction or distribution is permitted without written       //// 
+.................... //// permission.  Derivative programs created using this software    //// 
+.................... //// in object code form are not restricted in any way.              //// 
+.................... ///////////////////////////////////////////////////////////////////////// 
+....................  
+....................  
+....................  
+....................  
+....................  
+.................... #include <18F2550.h> 
+.................... //////// Standard Header file for the PIC18F2550 device //////////////// 
+.................... #device PIC18F2550 
+.................... #list 
+....................  
+.................... #fuses HS,NOWDT,NOPROTECT,NOLVP, NOMCLR 
+.................... #use delay(clock=20000000)    // must be 20 MHz 
+*
+01D8:  CLRF   FEA
+01DA:  MOVLW  1E
+01DC:  MOVWF  FE9
+01DE:  MOVF   FEF,W
+01E0:  BZ    01FC
+01E2:  MOVLW  06
+01E4:  MOVWF  01
+01E6:  CLRF   00
+01E8:  DECFSZ 00,F
+01EA:  BRA    01E8
+01EC:  DECFSZ 01,F
+01EE:  BRA    01E6
+01F0:  MOVLW  7B
+01F2:  MOVWF  00
+01F4:  DECFSZ 00,F
+01F6:  BRA    01F4
+01F8:  DECFSZ FEF,F
+01FA:  BRA    01E2
+01FC:  RETLW  00
+....................  
+....................  
+....................  
+....................  
+.................... CONST unsigned int SINE_WAVE[200] = { 
+.................... 128,132,136,139,143,147,150,154,158,161,165,169,172,176,179, 
+.................... 182,186,189,192,195,199,202,204,207,210,213,215,218,220,223, 
+.................... 225,227,229,231,233,235,237,238,240,241,242,243,244,245,246, 
+.................... 247,247,247,248,248,248,248,248,247,247,247,246,245,244,243, 
+.................... 242,241,240,238,237,235,233,231,229,227,225,223,220,218,215, 
+.................... 213,210,207,204,202,199,195,192,189,186,182,179,176,172,169, 
+.................... 165,161,158,154,150,147,143,139,136,132,128,124,120,117,113, 
+.................... 109,106,102, 98, 95, 91, 87, 84, 80, 77, 74, 70, 67, 64, 61, 
+....................  57, 54, 52, 49, 46, 43, 41, 38, 36, 33, 31, 29, 27, 25, 23, 
+....................  21, 19, 18, 16, 15, 14, 13, 12, 11, 10,  9,  9,  9,  8,  8, 
+....................   8,  8,  8,  9,  9,  9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 
+....................  21, 23, 25, 27, 29, 31, 33, 36, 38, 41, 43, 46, 49, 52, 54, 
+....................  57, 61, 64, 67, 70, 74, 77, 80, 84, 87, 91, 95, 98,102,106, 
+.................... 109,113,117,120,124}; 
+....................  
+.................... int index1,index2,inc1,inc2; 
+....................  
+....................  
+.................... #INT_RTCC 
+.................... void wave_generator() { 
+*
+016E:  CLRF   20
+....................    int wave = 0; 
+....................  
+....................    set_rtcc(25);           // when clock is 20MHz, interrupts every 100us 
+0170:  CLRF   FD7
+0172:  MOVLW  19
+0174:  MOVWF  FD6
+....................  
+....................    wave = ((long)SINE_WAVE[index1]+(long)SINE_WAVE[index2])/2; 
+0176:  CLRF   03
+0178:  MOVF   16,W
+017A:  MOVFF  FF2,21
+017E:  BCF    FF2.7
+0180:  RCALL  0096
+0182:  BTFSC  21.7
+0184:  BSF    FF2.7
+0186:  MOVWF  01
+0188:  CLRF   22
+018A:  MOVWF  21
+018C:  CLRF   03
+018E:  MOVF   17,W
+0190:  MOVFF  FF2,23
+0194:  BCF    FF2.7
+0196:  RCALL  0096
+0198:  BTFSC  23.7
+019A:  BSF    FF2.7
+019C:  MOVWF  01
+019E:  CLRF   03
+01A0:  MOVF   01,W
+01A2:  ADDWF  21,F
+01A4:  MOVF   03,W
+01A6:  ADDWFC 22,F
+01A8:  BCF    FD8.0
+01AA:  RRCF   22,W
+01AC:  RRCF   21,W
+01AE:  MOVWF  20
+....................    output_b(wave); 
+01B0:  CLRF   F93
+01B2:  MOVFF  20,F8A
+....................  
+....................    index1 += inc1; 
+01B6:  MOVF   18,W
+01B8:  ADDWF  16,F
+....................    index2 += inc2; 
+01BA:  MOVF   19,W
+01BC:  ADDWF  17,F
+....................  
+....................    if(index1 >= 200) 
+01BE:  MOVF   16,W
+01C0:  SUBLW  C7
+01C2:  BC    01C8
+....................       index1 -= 200; 
+01C4:  MOVLW  C8
+01C6:  SUBWF  16,F
+....................  
+....................    if(index2 >= 200) 
+01C8:  MOVF   17,W
+01CA:  SUBLW  C7
+01CC:  BC    01D2
+....................       index2 -= 200; 
+01CE:  MOVLW  C8
+01D0:  SUBWF  17,F
+.................... } 
+....................  
+.................... #define DTMF_ROW1   14  // for 700 Hz, increment this many times every 100us 
+.................... #define DTMF_ROW2   15  // for 750 Hz, increment this many times every 100us 
+.................... #define DTMF_ROW3   17  // for 850 Hz, increment this many times every 100us 
+.................... #define DTMF_ROW4   19  // for 950 Hz, increment this many times every 100us 
+.................... #define DTMF_COLA   24  // for 1200 Hz, increment this many times every 100us 
+.................... #define DTMF_COLB   27  // for 1350 Hz, increment this many times every 100us 
+.................... #define DTMF_COLC   30  // for 1500 Hz, increment this many times every 100us 
+....................  
+01D2:  BCF    FF2.2
+01D4:  GOTO   0054
+.................... void generate_dtmf_tone(char keypad, long duration)  { 
+....................  
+....................    index1=0; 
+*
+01FE:  CLRF   16
+....................    index2=0; 
+0200:  CLRF   17
+....................    inc1=0; 
+0202:  CLRF   18
+....................    inc2=0; 
+0204:  CLRF   19
+....................    if((keypad=='1')||(keypad=='2')||(keypad=='3')) 
+0206:  MOVF   1B,W
+0208:  SUBLW  31
+020A:  BZ    0218
+020C:  MOVF   1B,W
+020E:  SUBLW  32
+0210:  BZ    0218
+0212:  MOVF   1B,W
+0214:  SUBLW  33
+0216:  BNZ   021E
+....................       inc1=DTMF_ROW1; 
+0218:  MOVLW  0E
+021A:  MOVWF  18
+....................    else if((keypad=='4')||(keypad=='5')||(keypad=='6')) 
+021C:  BRA    0264
+021E:  MOVF   1B,W
+0220:  SUBLW  34
+0222:  BZ    0230
+0224:  MOVF   1B,W
+0226:  SUBLW  35
+0228:  BZ    0230
+022A:  MOVF   1B,W
+022C:  SUBLW  36
+022E:  BNZ   0236
+....................       inc1=DTMF_ROW2; 
+0230:  MOVLW  0F
+0232:  MOVWF  18
+....................    else if((keypad=='7')||(keypad=='8')||(keypad=='9')) 
+0234:  BRA    0264
+0236:  MOVF   1B,W
+0238:  SUBLW  37
+023A:  BZ    0248
+023C:  MOVF   1B,W
+023E:  SUBLW  38
+0240:  BZ    0248
+0242:  MOVF   1B,W
+0244:  SUBLW  39
+0246:  BNZ   024E
+....................       inc1=DTMF_ROW3; 
+0248:  MOVLW  11
+024A:  MOVWF  18
+....................    else if((keypad=='*')||(keypad=='0')||(keypad=='#')) 
+024C:  BRA    0264
+024E:  MOVF   1B,W
+0250:  SUBLW  2A
+0252:  BZ    0260
+0254:  MOVF   1B,W
+0256:  SUBLW  30
+0258:  BZ    0260
+025A:  MOVF   1B,W
+025C:  SUBLW  23
+025E:  BNZ   0264
+....................       inc1=DTMF_ROW4; 
+0260:  MOVLW  13
+0262:  MOVWF  18
+....................  
+....................    if((keypad=='1')||(keypad=='4')||(keypad=='7')||(keypad=='*')) 
+0264:  MOVF   1B,W
+0266:  SUBLW  31
+0268:  BZ    027C
+026A:  MOVF   1B,W
+026C:  SUBLW  34
+026E:  BZ    027C
+0270:  MOVF   1B,W
+0272:  SUBLW  37
+0274:  BZ    027C
+0276:  MOVF   1B,W
+0278:  SUBLW  2A
+027A:  BNZ   0282
+....................       inc2=DTMF_COLA; 
+027C:  MOVLW  18
+027E:  MOVWF  19
+....................    else if((keypad=='2')||(keypad=='5')||(keypad=='8')||(keypad=='0')) 
+0280:  BRA    02BC
+0282:  MOVF   1B,W
+0284:  SUBLW  32
+0286:  BZ    029A
+0288:  MOVF   1B,W
+028A:  SUBLW  35
+028C:  BZ    029A
+028E:  MOVF   1B,W
+0290:  SUBLW  38
+0292:  BZ    029A
+0294:  MOVF   1B,W
+0296:  SUBLW  30
+0298:  BNZ   02A0
+....................       inc2=DTMF_COLB; 
+029A:  MOVLW  1B
+029C:  MOVWF  19
+....................    else if((keypad=='3')||(keypad=='6')||(keypad=='9')||(keypad=='#')) 
+029E:  BRA    02BC
+02A0:  MOVF   1B,W
+02A2:  SUBLW  33
+02A4:  BZ    02B8
+02A6:  MOVF   1B,W
+02A8:  SUBLW  36
+02AA:  BZ    02B8
+02AC:  MOVF   1B,W
+02AE:  SUBLW  39
+02B0:  BZ    02B8
+02B2:  MOVF   1B,W
+02B4:  SUBLW  23
+02B6:  BNZ   02BC
+....................       inc2=DTMF_COLC; 
+02B8:  MOVLW  1E
+02BA:  MOVWF  19
+....................  
+....................    setup_counters(RTCC_INTERNAL,RTCC_DIV_2); 
+02BC:  BCF    FD1.0
+02BE:  MOVLW  80
+02C0:  MOVWF  FD5
+....................    enable_interrupts(INT_RTCC); 
+02C2:  BSF    FF2.5
+....................    enable_interrupts(GLOBAL); 
+02C4:  MOVLW  C0
+02C6:  IORWF  FF2,F
+....................  
+....................    while(duration-- > 0) 
+....................    { 
+02C8:  MOVFF  1D,03
+02CC:  MOVF   1C,W
+02CE:  BTFSC  FD8.2
+02D0:  DECF   1D,F
+02D2:  DECF   1C,F
+02D4:  MOVWF  1E
+02D6:  MOVFF  03,1F
+02DA:  MOVF   1E,F
+02DC:  BNZ   02E2
+02DE:  MOVF   1F,F
+02E0:  BZ    02EA
+....................       delay_ms(1); 
+02E2:  MOVLW  01
+02E4:  MOVWF  1E
+02E6:  RCALL  01D8
+....................    } 
+02E8:  BRA    02C8
+....................    disable_interrupts(INT_RTCC); 
+02EA:  BCF    FF2.5
+....................    output_b(0); 
+02EC:  CLRF   F93
+02EE:  CLRF   F8A
+.................... } 
+02F0:  RETLW  00
+....................  
+....................  
+.................... void main()  { 
+02F2:  CLRF   FF8
+02F4:  BCF    FD0.7
+02F6:  BSF    07.7
+02F8:  CLRF   FEA
+02FA:  CLRF   FE9
+02FC:  MOVF   FC1,W
+02FE:  ANDLW  C0
+0300:  IORLW  0F
+0302:  MOVWF  FC1
+0304:  MOVLW  07
+0306:  MOVWF  FB4
+....................    char k; 
+....................  
+....................  
+....................  
+....................    while(TRUE) 
+....................    { 
+....................            
+....................     if(input(PIN_A0)==1){ 
+0308:  BSF    F92.0
+030A:  BTFSS  F80.0
+030C:  BRA    0330
+....................                      generate_dtmf_tone('1', 500); 
+030E:  MOVLW  31
+0310:  MOVWF  1B
+0312:  MOVLW  01
+0314:  MOVWF  1D
+0316:  MOVLW  F4
+0318:  MOVWF  1C
+031A:  RCALL  01FE
+....................                      delay_ms(200); 
+031C:  MOVLW  C8
+031E:  MOVWF  1E
+0320:  RCALL  01D8
+....................                      generate_dtmf_tone('2', 500); 
+0322:  MOVLW  32
+0324:  MOVWF  1B
+0326:  MOVLW  01
+0328:  MOVWF  1D
+032A:  MOVLW  F4
+032C:  MOVWF  1C
+032E:  RCALL  01FE
+....................                   //   if(k=='9')k='1'; 
+....................                   //   k++;} 
+....................                   } 
+.................... }} 
+0330:  BRA    0308
+0332:  SLEEP 
+
+Configuration Fuses:
+   Word  1: CC3F   IESO FCMEN HS PLL12 CPUDIV4 USBDIV
+   Word  2: 1E3E   BROWNOUT NOWDT BORV20 PUT WDT32768 VREGEN
+   Word  3: 0700   PBADEN CCP2C1 NOMCLR LPT1OSC
+   Word  4: 0081   STVREN NODEBUG NOLVP NOXINST
+   Word  5: C00F   NOPROTECT NOCPD NOCPB
+   Word  6: E00F   NOWRT NOWRTD NOWRTC NOWRTB
+   Word  7: 400F   NOEBTR NOEBTRB
